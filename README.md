@@ -68,40 +68,6 @@ gFID drops from 28.03 → 23.93 (DiT-S), 20.36 → 9.81 (DiT-B), and 5.89 → 4.
 <sub>DSR reaches the baseline's quality with roughly 4× fewer training epochs.</sub>
 </div>
 
-### Text-to-image (Scale-RAE)
-
-| Model      | GenEval ↑ | DPG-Bench ↑ |
-| :--------- | :-------: | :---------: |
-| Baseline   |   42.6    |    74.3     |
-| **+ DSR**  | **46.6**  |  **75.4**   |
-
-The text-to-image setup uses the Scale-RAE MetaQuery architecture trained on
-24.7 M FLUX.1-schnell-generated images; that code path is not included in
-this repository.
-
-## Method at a glance
-
-<div align="center">
-<img src="assets/encoder_outlier.png" alt="Outlier tokens in ViT encoders" width="90%">
-</div>
-
-DSR places register tokens at **two** points in the pipeline:
-
-1. **Encoder-side registers.** For encoders that already ship with register
-   tokens (e.g. DINOv2-with-registers) we simply use them. For SigLIP2 — which
-   does not — we apply **recursive test-time registers** that identify and
-   reroute the neurons responsible for outlier behaviour without retraining
-   the encoder. The register-neuron indices for SigLIP2-B and SigLIP2-So400M
-   are vendored under
-   `src/stage1/encoders/siglip2_tt_reg/outputs/register_neurons/`.
-2. **Diffusion registers.** Inside the DiT denoiser we insert a small bank of
-   learnable register tokens (default: **36 tokens starting from block 8**,
-   in-context conditioning) that absorb the sink-like behaviour that otherwise
-   corrupts intermediate-layer patch features.
-
-Simply masking out high-norm tokens with a loss filter **does not** help, which
-is what motivates the register-based intervention.
-
 ## Setup
 
 Tested with CUDA 12.9 on H100 / H200; should work on any Ampere-or-newer GPU
