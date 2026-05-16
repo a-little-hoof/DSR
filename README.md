@@ -284,7 +284,7 @@ If you find this work useful, please cite:
 ## Acknowledgements
 
 This codebase builds on the excellent open-source work of
-[RAE](https://github.com/) (the underlying stage-1 / stage-2 latent-diffusion
+[RAE](https://github.com/bytetriper/RAE) (the underlying stage-1 / stage-2 latent-diffusion
 recipe) and [LightningDiT](https://github.com/hustvl/LightningDiT) (denoiser architecture),
 The test-time-register intervention follows
-[Jiang et al., 2025](https://arxiv.org/abs/2510.14953)
+[Jiang et al., 2025](https://arxiv.org/abs/2506.08010)
