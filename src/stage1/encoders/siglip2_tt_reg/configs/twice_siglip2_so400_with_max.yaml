@@ -1,0 +1,2 @@
+model_name: 'google/siglip2-so400m-patch14-224'
+neurons_to_ablate: "src/stage1/encoders/siglip2_tt_reg/outputs/register_neurons/twice/siglip2so/000R1_20260209_160230/neurons_to_ablate_merge.json"

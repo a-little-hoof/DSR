@@ -1,0 +1,60 @@
+stage_1:
+  target: stage1.RAE
+  params:
+    encoder_cls: 'SigLIP2wNorm'
+    encoder_config_path: 'google/siglip2-so400m-patch14-224'
+    encoder_input_size: 224
+    encoder_params: {'model_name': 'google/siglip2-so400m-patch14-224'}
+    decoder_config_path: 'configs/decoder/ViTXL'
+    pretrained_decoder_path: 'models/decoders/siglip2_so/base_p16_i256/ViTXL_n08/ema.pt'
+    noise_tau: 0.
+    reshape_to_2d: True
+    normalization_stat_path: 'models/stats/siglipv2_so/RAE-pretrained-bs256-fp32/normalization_stats.pt'
+
+stage_2:
+  target: stage2.models.lightningDiT.LightningDiT
+  params:
+    input_size: 16
+    patch_size: 1
+    in_channels: 1152
+    hidden_size: 1152
+    depth: 28
+    num_heads: 16
+    mlp_ratio: 4.0
+    class_dropout_prob: 0.1
+    num_classes: 1000
+    use_qknorm: false
+    use_swiglu: true
+    use_rope: true
+    use_rmsnorm: true
+    wo_shift: false
+  ckpt: results/stage2/DiT-XL_SigLIP2-so_data_lognormal/800_Epochs_train-stage2_DiT-XL_SigLIP2-so_data_lognormal/checkpoints
+
+
+transport:
+  params:
+    path_type: 'Linear'
+    prediction: 'data'
+    loss_weight: null
+    time_dist_type: 'logit-normal_0_1' # this can be 'uniform' or 'logit-normal_0_1'
+
+sampler:
+  mode: ODE
+  params:
+    sampling_method: 'euler'
+    num_steps: 50
+    atol: 1.0e-6
+    rtol: 1.0e-3
+    reverse: false
+
+guidance:
+  method: 'cfg'
+  scale: 1.0
+  t_min: 0.0
+  t_max: 1.0
+
+misc:
+  latent_size: [1152, 16, 16] # [C, H, W]
+  num_classes: 1000
+  time_dist_shift_dim: 196608 # 16*16*768
+  time_dist_shift_base: 4096
