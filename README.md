@@ -114,6 +114,8 @@ Both are released here (you must accept the ImageNet license to use them):
 
 > **Download (Google Drive):** <https://drive.google.com/drive/folders/1AqBGnf43rWr423whJwWR5t9nbrjTxZjb?usp=share_link>
 
+You can also find the stat and decoder from the [RAE](https://github.com/bytetriper/RAE) repo.
+
 Place the downloaded folder so the layout becomes:
 
 ```
